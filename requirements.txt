@@ -1,0 +1,10 @@
+tensorflow
+streamlit 
+PIL
+matplotlib.pyplot
+numpy
+pandas
+gdown
+os
+cv2 
+shutil

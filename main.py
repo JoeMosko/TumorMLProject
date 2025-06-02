@@ -7,7 +7,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import time
+import gdown
 import os
 import cv2 
 import shutil
@@ -20,6 +20,14 @@ import shutil
 #15% validation
 #Each folder having 4 subfolders for each type of brain scan
 
+def downloadModel():
+    fileId = "1-wt7sEMGElGZ-iLzJKs0Tbtn6gs8uSqm"  # Replace with your actual ID
+    url = f"https://drive.google.com/uc?id={fileId}"
+    output = "model.keras"
+    if not os.path.exists(output):
+        gdown.download(url, output, quiet=False)
+
+downloadModel()
 
 
 def moveHealthyFilesToTraining():
