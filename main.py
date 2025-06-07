@@ -18,7 +18,8 @@ import shutil
 #15% test
 #15% validation
 #Each folder having 4 subfolders for each type of brain scan
-
+#Have to tell the os that there are no cuda devices, since streamlit does not allow
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 def downloadModel():
     fileId = "1-wt7sEMGElGZ-iLzJKs0Tbtn6gs8uSqm"  # Replace with your actual ID
     url = f"https://drive.google.com/uc?id={fileId}"
