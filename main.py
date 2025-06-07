@@ -249,7 +249,7 @@ def main():
    
     st.markdown('<h1 style="color:#022645; font-size: 40px; text-align: center;"> Tumor Detection by Joey Mosko</h1>', unsafe_allow_html=True)
     #st.markdown('<h1 style="color:#022645;"> Tumor Detection by Joe Mosko</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color:#022645; font-size: 30px; text-align: center;"> This machine learning model detects glioma, pituitary, meningioma, and pituitary tumors, or if the brain scan shows no tumor by using thousands of sample images to trian the model on.</p>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#022645; font-size: 30px; text-align: center;"> This machine learning model detects glioma, pituitary, meningioma, and pituitary tumors, or if the brain scan shows no tumor by using thousands of sample images to train the model on.</p>', unsafe_allow_html=True)
 
     
     uploadedFile = st.file_uploader("Start by uploading your image here (jpg or png)", type=["jpg", "jpeg", "png"])
@@ -257,16 +257,15 @@ def main():
         img = Image.open(uploadedFile)
         with st.spinner("Analyzing brain scan..."):
             result, probabilities  = predictUploadedScan(img, model, classNames)
-        if st.button("View uploaded image"):
-            st.image(img)
         st.write(result)
-
-    if st.button("View graph of probalilities"):
-       fig, ax = plt.subplots()
-       ax.bar(classNames, np.squeeze(probabilities * 100))
-       ax.set_ylabel("Probability %")
-       ax.set_title("Prediction Probabilities")
-       st.pyplot(fig)
+        if st.button("View graph of probalilities"):
+            fig, ax = plt.subplots()
+            ax.bar(classNames, np.squeeze(probabilities * 100))
+            ax.set_ylabel("Probability %")
+            ax.set_title("Prediction Probabilities")
+            st.pyplot(fig)
+        if st.button("View uploaded image"):
+            st.image(img.resize((512, 512)))
 main()
-
+ 
 
