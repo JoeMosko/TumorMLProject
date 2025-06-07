@@ -1,7 +1,7 @@
 tensorflow
 streamlit 
 Pillow
-matplotlib.pyplot
+matplotlib-pyplot
 numpy
 pandas
 gdown
