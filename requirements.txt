@@ -1,10 +1,8 @@
 tensorflow
-streamlit 
+streamlit
 Pillow
-matplotlib-pyplot
+matplotlib
 numpy
 pandas
 gdown
-os
-cv2 
-shutil
+opencv-python
