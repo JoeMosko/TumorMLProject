@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 import gdown
 import os
-import cv2 
 import shutil
 # https://www.kaggle.com/datasets/rm1000/brain-tumor-mri-scans/data 
 
