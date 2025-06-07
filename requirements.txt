@@ -1,6 +1,6 @@
 tensorflow
 streamlit 
-PIL
+Pillow
 matplotlib.pyplot
 numpy
 pandas
