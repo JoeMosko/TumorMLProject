@@ -204,7 +204,7 @@ def predictScan(path, model, classNames):
 def predictUploadedScan(uploadedImg, model, classNames):
 
     #Load the image in the specifified parameters we need (512x512)
-    img = uploadedImg.resize((512, 512))
+    img = uploadedImg.resize((256, 256))
 
     
     #Convert the image to an arr for the model 
