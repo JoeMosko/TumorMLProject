@@ -1,6 +1,6 @@
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-
+os.environ["TF_XLA_FLAGS"] = "--tf_xla_enable_xla_devices=false"
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator # type: ignore
 from tensorflow.keras.utils import load_img # type: ignore
