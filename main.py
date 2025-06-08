@@ -1,3 +1,6 @@
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator # type: ignore
 from tensorflow.keras.utils import load_img # type: ignore
@@ -8,8 +11,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import gdown
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import shutil
 # https://www.kaggle.com/datasets/rm1000/brain-tumor-mri-scans/data 
 
