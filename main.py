@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import gdown
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import shutil
 # https://www.kaggle.com/datasets/rm1000/brain-tumor-mri-scans/data 
 
@@ -19,7 +20,7 @@ import shutil
 #15% validation
 #Each folder having 4 subfolders for each type of brain scan
 #Have to tell the os that there are no cuda devices, since streamlit does not allow
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 def downloadModel():
     fileId = "1-wt7sEMGElGZ-iLzJKs0Tbtn6gs8uSqm"  # Replace with your actual ID
     url = f"https://drive.google.com/uc?id={fileId}"
@@ -158,30 +159,9 @@ classNames = ['glioma', 'healthy', 'meningioma', 'pituitary']
 #print(cv2.imread('TrainingData/glioma/0000.jpg').shape)
 
 #Have colors between 0-1
-train = ImageDataGenerator(rescale = 1/255)
-validation = ImageDataGenerator(rescale = 1/255)
-test = ImageDataGenerator(rescale = 1/255)
 
 #Create dataset that can be fed to NN
 
-trainData = train.flow_from_directory('TrainingData', 
-                                      #keep size the same 
-                                      target_size = (512,512),
-                                      #Need categorical class because our output is more than 2 classes 
-                                      class_mode = 'categorical',
-                                      batch_size = 32)
-validationData = validation.flow_from_directory('ValidationData',
-                                                #keep size the same 
-                                                target_size = (512,512),
-                                                #Need categorical class because our output is more than 2 classes 
-                                                class_mode = 'categorical',
-                                                batch_size = 32)
-TestData = validation.flow_from_directory('TestingData',
-                                                #keep size the same 
-                                                target_size = (512,512),
-                                                #Need categorical class because our output is more than 2 classes 
-                                                class_mode = 'categorical',
-                                                batch_size = 32)
 #Indexes for result intepretation
 #glioma: 0, healthy: 1, meningioma: 2, pituitary: 3
 
