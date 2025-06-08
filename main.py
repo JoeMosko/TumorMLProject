@@ -29,9 +29,16 @@ def downloadModel():
     if not os.path.exists(output):
         gdown.download(url, output, quiet=False)
     return tf.keras.models.load_model(output)
-model = downloadModel()
-
-
+#model = downloadModel()
+@st.cache_resource
+def downloadliteModel():
+    fileId = "1DiDhdZEM1nkpyWwJUodUqnR0dgCaeHZ0"  # Replace with your actual ID
+    url = f"https://drive.google.com/uc?id={fileId}"
+    output = "litemodel.keras"
+    if not os.path.exists(output):
+        gdown.download(url, output, quiet=False)
+    return tf.keras.models.load_model(output)
+model = downloadliteModel()
 def moveHealthyFilesToTraining():
 
     #For healthy...
