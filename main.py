@@ -20,15 +20,15 @@ import shutil
 #15% validation
 #Each folder having 4 subfolders for each type of brain scan
 #Have to tell the os that there are no cuda devices, since streamlit does not allow
-
+@st.cache_resource
 def downloadModel():
     fileId = "1-wt7sEMGElGZ-iLzJKs0Tbtn6gs8uSqm"  # Replace with your actual ID
     url = f"https://drive.google.com/uc?id={fileId}"
     output = "model.keras"
     if not os.path.exists(output):
         gdown.download(url, output, quiet=False)
-
-downloadModel()
+    return tf.keras.models.load_model(output)
+model = downloadModel()
 
 
 def moveHealthyFilesToTraining():
@@ -165,8 +165,6 @@ classNames = ['glioma', 'healthy', 'meningioma', 'pituitary']
 #Indexes for result intepretation
 #glioma: 0, healthy: 1, meningioma: 2, pituitary: 3
 
-#Initialize model 
-model = tf.keras.models.load_model("model.keras")
 
 
 
