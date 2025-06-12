@@ -12,7 +12,8 @@ import numpy as np
 import pandas as pd
 import gdown
 import shutil
-# https://www.kaggle.com/datasets/rm1000/brain-tumor-mri-scans/data 
+#Source of images
+#https://www.kaggle.com/datasets/rm1000/brain-tumor-mri-scans/data 
 
 
 #Need to split the data into...
@@ -20,7 +21,7 @@ import shutil
 #15% test
 #15% validation
 #Each folder having 4 subfolders for each type of brain scan
-#Have to tell the os that there are no cuda devices, since streamlit does not allow
+
 @st.cache_resource
 def downloadModel():
     fileId = "1-wt7sEMGElGZ-iLzJKs0Tbtn6gs8uSqm"  # Replace with your actual ID
@@ -160,7 +161,7 @@ def movePituitaryFilesToTraining():
 
 
 #Needed to interpret output of the model 
-classNames = ['glioma', 'healthy', 'meningioma', 'pituitary']
+classNames = ['glioma', 'healthy', 'meningioma', 'pituitary', 'no scan']
 
 
 #The shape of each scan (512x512 pixels, rgb 3 colors)
@@ -222,8 +223,8 @@ def predictUploadedScan(uploadedImg, model, classNames):
     #Take the max of the prediction array (will be confidence % when multiplied by 100)
     confidence = np.max(predictionProbabilities)
 
-    if (confidence * 100) < 60:
-        return "The model cannot confidendely make a prediction on this image.", predictionProbabilities
+    if (predictedClass == classNames[4]):
+        return "The model does not believe this to be an MRI scan. Please try again.", predictionProbabilities
     #Return result to user
     if predictedClass == classNames[1]:
         return (f"The model predicts with {confidence * 100:.2f}% confidence that the brain scan shows no tumor."), predictionProbabilities

@@ -139,7 +139,7 @@ def movePituitaryFilesToTraining():
 
 
 #Needed to interpret output of the model 
-classNames = ['glioma', 'healthy', 'meningioma', 'pituitary']
+classNames = ['glioma', 'healthy', 'meningioma', 'pituitary', 'no scan']
 
 
 #The shape of each scan (512x512 pixels, rgb 3 colors)
@@ -171,7 +171,7 @@ TestData = validation.flow_from_directory('TestingData',
                                                 class_mode = 'categorical',
                                                 batch_size = 32)
 #Indexes for result intepretation
-#glioma: 0, healthy: 1, meningioma: 2, pituitary: 3
+#glioma: 0, healthy: 1, meningioma: 2, pituitary: 3, no scan: 4
 
 #create model 
 
@@ -190,7 +190,7 @@ model = tf.keras.Sequential([
     #prevent overfitting - where the model becomes innacurate based on too much data 
     tf.keras.layers.Dropout(0.5),
     #4 and softmax activation because we have 4 outcomes 
-    tf.keras.layers.Dense(4, activation='softmax')
+    tf.keras.layers.Dense(5, activation='softmax')
 ])
 
 #compile model 
@@ -199,7 +199,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 #fit the model with the training data
-modelFit = model.fit(trainData, epochs=6, validation_data = validationData)
+modelFit = model.fit(trainData, epochs=7, validation_data = validationData)
 
 probablityModel  = tf.keras.Sequential([model, tf.keras.layers.Softmax()])
 
