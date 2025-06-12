@@ -161,7 +161,7 @@ def movePituitaryFilesToTraining():
 
 
 #Needed to interpret output of the model 
-classNames = ['glioma', 'healthy', 'meningioma', 'pituitary', 'no scan']
+classNames = ['glioma', 'healthy', 'meningioma', 'no scan', 'pituitary']
 
 
 #The shape of each scan (512x512 pixels, rgb 3 colors)
@@ -223,7 +223,7 @@ def predictUploadedScan(uploadedImg, model, classNames):
     #Take the max of the prediction array (will be confidence % when multiplied by 100)
     confidence = np.max(predictionProbabilities)
 
-    if (predictedClass == classNames[4]):
+    if (predictedClass == classNames[3]):
         return "The model does not believe this to be an MRI scan. Please try again.", predictionProbabilities
     #Return result to user
     if predictedClass == classNames[1]:
@@ -253,6 +253,6 @@ def main():
             st.pyplot(fig)
         if st.button("View uploaded image"):
             st.image(img.resize((512, 512)))
-main()
- 
 
+ 
+main()

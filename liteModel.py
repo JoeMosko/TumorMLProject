@@ -139,7 +139,7 @@ def movePituitaryFilesToTraining():
 
 
 #Needed to interpret output of the model 
-classNames = ['glioma', 'healthy', 'meningioma', 'pituitary', 'no scan']
+classNames = ['glioma', 'healthy', 'meningioma', 'not MRI scan', 'pituitary']
 
 
 #The shape of each scan (512x512 pixels, rgb 3 colors)
