@@ -143,7 +143,7 @@ classNames = ['glioma', 'healthy', 'meningioma', 'pituitary']
 
 
 #The shape of each scan (512x512 pixels, rgb 3 colors)
-print(cv2.imread('TrainingData/glioma/0000.jpg').shape)
+# print(cv2.imread('TrainingData/glioma/0000.jpg').shape)
 
 #Have colors between 0-1
 train = ImageDataGenerator(rescale = 1/255)
@@ -153,11 +153,11 @@ test = ImageDataGenerator(rescale = 1/255)
 #Create dataset that can be fed to NN
 
 trainData = train.flow_from_directory('TrainingData', 
-                                      #keep size the same 
-                                      target_size = (512,512),
-                                      #Need categorical class because our output is more than 2 classes 
-                                      class_mode = 'categorical',
-                                      batch_size = 32)
+                                                #keep size the same 
+                                                target_size = (512,512),
+                                                #Need categorical class because our output is more than 2 classes 
+                                                class_mode = 'categorical',
+                                                batch_size = 32)
 validationData = validation.flow_from_directory('ValidationData',
                                                 #keep size the same 
                                                 target_size = (512,512),
@@ -179,12 +179,12 @@ tf.ENABLE.ONEDNN.OPTS= 0
 model = tf.keras.Sequential([
     #first layer (transforms format of image from a 2d array to a 1d array)
     tf.keras.layers.Conv2D(16, (3,3), activation='relu', input_shape=(512,512,3)),
-    #
+    # 32 3x3 filters (feature maps) slide across the image, looking for rough edges and oddities
     tf.keras.layers.MaxPool2D(2,2),
      tf.keras.layers.Conv2D(32, (3,3), activation='relu'),
-    #
+    
     tf.keras.layers.MaxPool2D(2,2),
-    #
+    
     tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
     tf.keras.layers.MaxPool2D(2,2),
 
@@ -208,7 +208,7 @@ modelFit = model.fit(trainData, epochs=6, validation_data = validationData)
 probablityModel  = tf.keras.Sequential([model, tf.keras.layers.Softmax()])
 
 testLoss, testAccuracy = model.evaluate(TestData)
-
+#Print results of training
 print(f"Test Accuracy: {testAccuracy * 100:.2f}%")
 print(f"Test Loss: {testLoss:.4f}")
 

@@ -16,11 +16,6 @@ import shutil
 #https://www.kaggle.com/datasets/rm1000/brain-tumor-mri-scans/data 
 
 
-#Need to split the data into...
-#70% training
-#15% test
-#15% validation
-#Each folder having 4 subfolders for each type of brain scan
 
 @st.cache_resource
 def downloadModel():
@@ -32,13 +27,17 @@ def downloadModel():
     return tf.keras.models.load_model(output)
 #model = downloadModel()
 @st.cache_resource
+#Method to download model from googledrive (too large for github)
 def downloadliteModel():
-    fileId = "1DiDhdZEM1nkpyWwJUodUqnR0dgCaeHZ0"  # Replace with your actual ID
+    fileId = "1DiDhdZEM1nkpyWwJUodUqnR0dgCaeHZ0"  
     url = f"https://drive.google.com/uc?id={fileId}"
     output = "litemodel.keras"
     if not os.path.exists(output):
         gdown.download(url, output, quiet=False)
     return tf.keras.models.load_model(output)
+
+
+
 model = downloadliteModel()
 def moveHealthyFilesToTraining():
 
@@ -161,7 +160,7 @@ def movePituitaryFilesToTraining():
 
 
 #Needed to interpret output of the model 
-classNames = ['glioma', 'healthy', 'meningioma', 'no scan', 'pituitary']
+classNames = ['glioma', 'healthy', 'meningioma', 'not MRI scan', 'pituitary']
 
 
 #The shape of each scan (512x512 pixels, rgb 3 colors)
@@ -238,18 +237,22 @@ def main():
     #st.markdown('<h1 style="color:#022645;"> Tumor Detection by Joe Mosko</h1>', unsafe_allow_html=True)
     st.markdown('<p style="color:#022645; font-size: 30px; text-align: center;"> This machine learning model detects glioma, pituitary, meningioma, and pituitary tumors, or if the brain scan shows no tumor by using thousands of sample images to train the model on.</p>', unsafe_allow_html=True)
 
-    
+    #Streamlit code for website
     uploadedFile = st.file_uploader("Start by uploading your image here (jpg or png)", type=["jpg", "jpeg", "png"])
     if uploadedFile is not None:
         img = Image.open(uploadedFile)
+        #Create natural lag while model processes 
         with st.spinner("Analyzing brain scan..."):
             result, probabilities  = predictUploadedScan(img, model, classNames)
         st.write(result)
         if st.button("View graph of probalilities"):
+            #use matplotlib to graph all final weights (predictions)
             fig, ax = plt.subplots()
+            #multiply by 100 so scale is acrruate percentages 
             ax.bar(classNames, np.squeeze(probabilities * 100))
             ax.set_ylabel("Probability %")
             ax.set_title("Prediction Probabilities")
+            #Plot figure
             st.pyplot(fig)
         if st.button("View uploaded image"):
             st.image(img.resize((512, 512)))

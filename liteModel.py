@@ -178,9 +178,9 @@ TestData = validation.flow_from_directory('TestingData',
 model = tf.keras.Sequential([
     #first layer (transforms format of image from a 2d array to a 1d array)
     tf.keras.layers.Conv2D(16, (3,3), activation='relu', input_shape=(256,256,3)),
-    #
+    
     tf.keras.layers.MaxPool2D(2,2),
-    #
+    
     tf.keras.layers.Conv2D(32, (3,3), activation='relu'),
     tf.keras.layers.MaxPool2D(2,2),
 
