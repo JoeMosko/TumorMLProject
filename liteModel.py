@@ -202,7 +202,7 @@ model.compile(optimizer='adam',
 modelFit = model.fit(trainData, epochs=7, validation_data = validationData)
 
 probablityModel  = tf.keras.Sequential([model, tf.keras.layers.Softmax()])
-
+#Evaluate loss and accuracy 
 testLoss, testAccuracy = model.evaluate(TestData)
 
 print(f"Test Accuracy: {testAccuracy * 100:.2f}%")
