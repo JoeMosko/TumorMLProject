@@ -38,7 +38,7 @@ def downloadliteModel():
 
 
 
-model = downloadliteModel()
+model = tf.keras.models.load_model("litemodel.keras")
 def moveHealthyFilesToTraining():
 
     #For healthy...
