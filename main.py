@@ -233,7 +233,7 @@ def predictUploadedScan(uploadedImg, model, classNames):
 
 def main():
    
-    st.markdown('<h1 style="color:#022645; font-size: 40px; text-align: center;"> Tumor Detection by Joey Mosko</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="color:#022645; font-size: 40px; text-align: center;"> Tumor Detection by Joe Mosko</h1>', unsafe_allow_html=True)
     #st.markdown('<h1 style="color:#022645;"> Tumor Detection by Joe Mosko</h1>', unsafe_allow_html=True)
     st.markdown('<p style="color:#022645; font-size: 30px; text-align: center;"> This machine learning model detects glioma, pituitary, meningioma, and pituitary tumors, or if the brain scan shows no tumor by using thousands of sample images to train the model on.</p>', unsafe_allow_html=True)
 
