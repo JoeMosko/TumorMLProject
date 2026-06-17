@@ -219,7 +219,7 @@ def predictUploadedScan(uploadedImg, model, classNames):
     # Debug
     st.write("Input shape:", imgAsArr.shape)
     st.write("Model input shape:", model.input_shape)
-
+    st.write("Image mode:", img.mode)
     predictionProbabilities = model.predict(imgAsArr, verbose=0)
     predictionIndex = np.argmax(predictionProbabilities[0])
 
