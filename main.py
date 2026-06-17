@@ -203,33 +203,36 @@ def predictScan(path, model, classNames):
 
 def predictUploadedScan(uploadedImg, model, classNames):
 
-    #Load the image in the specifified parameters we need (512x512)
-    img = uploadedImg.resize((512, 512))
+    # Convert uploaded image to grayscale
+    img = uploadedImg.convert("L")
+    img = img.resize((512, 512))
 
-    
-    #Convert the image to an arr for the model 
-    imgAsArr = img_to_array(img) / 255 #want array between 0 and 1
-    
+    # Convert to numpy array and normalize
+    imgAsArr = np.array(img, dtype=np.float32) / 255.0
+
+    # Add grayscale channel dimension: (512, 512) -> (512, 512, 1)
+    imgAsArr = np.expand_dims(imgAsArr, axis=-1)
+
+    # Add batch dimension: (512, 512, 1) -> (1, 512, 512, 1)
     imgAsArr = np.expand_dims(imgAsArr, axis=0)
-    
-    #Create an array of final weights predicted by the model 
-    predictionProbabilities = model.predict(imgAsArr)
-    #Get index of the highest probability 
-    predictionIndex = np.argmax(predictionProbabilities)
 
-    #Get the index of the correct prediction of all types of tumors possible in the model 
+    # Debug
+    st.write("Input shape:", imgAsArr.shape)
+    st.write("Model input shape:", model.input_shape)
+
+    predictionProbabilities = model.predict(imgAsArr, verbose=0)
+    predictionIndex = np.argmax(predictionProbabilities[0])
+
     predictedClass = classNames[predictionIndex]
-    #Take the max of the prediction array (will be confidence % when multiplied by 100)
-    confidence = np.max(predictionProbabilities)
+    confidence = np.max(predictionProbabilities[0])
 
-    if (predictedClass == classNames[3]):
+    if predictedClass == classNames[3]:
         return "The model does not believe this to be an MRI scan. Please try again.", predictionProbabilities
-    #Return result to user
-    if predictedClass == classNames[1]:
-        return (f"The model predicts with {confidence * 100:.2f}% confidence that the brain scan shows no tumor."), predictionProbabilities
-    else:
-        return(f"The model predicts with {confidence * 100:.2f}% confidence that the brain scan shows a {predictedClass} brain tumor."), predictionProbabilities
 
+    if predictedClass == classNames[1]:
+        return f"The model predicts with {confidence * 100:.2f}% confidence that the brain scan shows no tumor.", predictionProbabilities
+    else:
+        return f"The model predicts with {confidence * 100:.2f}% confidence that the brain scan shows a {predictedClass} brain tumor.", predictionProbabilities
 
 def main():
    
