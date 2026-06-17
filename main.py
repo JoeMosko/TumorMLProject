@@ -181,7 +181,7 @@ classNames = ['glioma', 'healthy', 'meningioma', 'not MRI scan', 'pituitary']
 def predictScan(path, model, classNames):
 
     #Load the image in the specifified parameters we need (512x512)
-    img = load_img(path, target_size=(512,512))
+    img = load_img(path, target_size=(256,256))
 
     
     #Convert the image to an arr for the model 
