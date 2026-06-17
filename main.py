@@ -204,14 +204,14 @@ def predictScan(path, model, classNames):
 def predictUploadedScan(uploadedImg, model, classNames):
 
     # Convert uploaded image to grayscale
-    img = uploadedImg.convert("L")
-    img = img.resize((512, 512))
+    img = uploadedImg.convert("RGB")
+    img = img.resize((256, 256))
 
     # Convert to numpy array and normalize
     imgAsArr = np.array(img, dtype=np.float32) / 255.0
 
     # Add grayscale channel dimension: (512, 512) -> (512, 512, 1)
-    imgAsArr = np.expand_dims(imgAsArr, axis=-1)
+    imgAsArr = np.expand_dims(imgAsArr, axis=0)
 
     # Add batch dimension: (512, 512, 1) -> (1, 512, 512, 1)
     imgAsArr = np.expand_dims(imgAsArr, axis=0)
