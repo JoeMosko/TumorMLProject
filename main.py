@@ -213,9 +213,6 @@ def predictUploadedScan(uploadedImg, model, classNames):
     # Add grayscale channel dimension: (512, 512) -> (512, 512, 1)
     imgAsArr = np.expand_dims(imgAsArr, axis=0)
 
-    # Add batch dimension: (512, 512, 1) -> (1, 512, 512, 1)
-    imgAsArr = np.expand_dims(imgAsArr, axis=0)
-
     # Debug
     st.write("Input shape:", imgAsArr.shape)
     st.write("Model input shape:", model.input_shape)
