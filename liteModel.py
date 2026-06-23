@@ -2,9 +2,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator # type: ignore
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import os
-import cv2 
 import shutil
 # https://www.kaggle.com/datasets/rm1000/brain-tumor-mri-scans/data 
 
@@ -146,67 +144,86 @@ classNames = ['glioma', 'healthy', 'meningioma', 'not MRI scan', 'pituitary']
 # print(cv2.imread('TrainingData/glioma/0000.jpg').shape)
 
 #Have colors between 0-1
-train = ImageDataGenerator(rescale = 1/255)
-validation = ImageDataGenerator(rescale = 1/255)
-test = ImageDataGenerator(rescale = 1/255)
+train = ImageDataGenerator(
+    rescale=1/255,
+    rotation_range=15,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+    shear_range=0.1,
+    zoom_range=0.1,
+    horizontal_flip=True,
+    fill_mode='nearest'
+)
+validation = ImageDataGenerator(rescale=1/255)
+test = ImageDataGenerator(rescale=1/255)
 
 #Create dataset that can be fed to NN
+trainData = train.flow_from_directory(
+    'TrainingData',
+    target_size=(256,256),
+    class_mode='categorical',
+    batch_size=32,
+    shuffle=True
+)
+validationData = validation.flow_from_directory(
+    'ValidationData',
+    target_size=(256,256),
+    class_mode='categorical',
+    batch_size=32,
+    shuffle=False
+)
+TestData = test.flow_from_directory(
+    'TestingData',
+    target_size=(256,256),
+    class_mode='categorical',
+    batch_size=32,
+    shuffle=False
+)
 
-trainData = train.flow_from_directory('TrainingData', 
-                                      #keep size the same 
-                                      target_size = (256,256),
-                                      #Need categorical class because our output is more than 2 classes 
-                                      class_mode = 'categorical',
-                                      batch_size = 32)
-validationData = validation.flow_from_directory('ValidationData',
-                                                #keep size the same 
-                                                target_size = (256,256),
-                                                #Need categorical class because our output is more than 2 classes 
-                                                class_mode = 'categorical',
-                                                batch_size = 32)
-TestData = validation.flow_from_directory('TestingData',
-                                                #keep size the same 
-                                                target_size = (256,256),
-                                                #Need categorical class because our output is more than 2 classes 
-                                                class_mode = 'categorical',
-                                                batch_size = 32)
-#Indexes for result intepretation
-#glioma: 0, healthy: 1, meningioma: 2, pituitary: 3, no scan: 4
+print('Class indices:', trainData.class_indices)
 
 #create model 
-
 model = tf.keras.Sequential([
-    #first layer (transforms format of image from a 2d array to a 1d array)
-    tf.keras.layers.Conv2D(16, (3,3), activation='relu', input_shape=(256,256,3)),
-    
+    tf.keras.layers.Input(shape=(256,256,3)),
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu', padding='same'),
     tf.keras.layers.MaxPool2D(2,2),
-    
-    tf.keras.layers.Conv2D(32, (3,3), activation='relu'),
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu', padding='same'),
     tf.keras.layers.MaxPool2D(2,2),
-
-    tf.keras.layers.Flatten(), 
-
-    tf.keras.layers.Dense(64, activation='relu'), 
-    #prevent overfitting - where the model becomes innacurate based on too much data 
+    tf.keras.layers.Conv2D(128, (3,3), activation='relu', padding='same'),
+    tf.keras.layers.MaxPool2D(2,2),
+    tf.keras.layers.Conv2D(256, (3,3), activation='relu', padding='same'),
+    tf.keras.layers.MaxPool2D(2,2),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(256, activation='relu'),
     tf.keras.layers.Dropout(0.5),
-    #4 and softmax activation because we have 4 outcomes 
     tf.keras.layers.Dense(5, activation='softmax')
 ])
 
 #compile model 
-model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
+model.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+callbacks = [
+    tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True),
+    tf.keras.callbacks.ModelCheckpoint('best_litemodel.keras', save_best_only=True, monitor='val_loss')
+]
 
 #fit the model with the training data
-modelFit = model.fit(trainData, epochs=7, validation_data = validationData)
+modelFit = model.fit(
+    trainData,
+    epochs=15,
+    validation_data=validationData,
+    callbacks=callbacks
+)
 
-probablityModel  = tf.keras.Sequential([model, tf.keras.layers.Softmax()])
 #Evaluate loss and accuracy 
+TestData.reset()
 testLoss, testAccuracy = model.evaluate(TestData)
 
 print(f"Test Accuracy: {testAccuracy * 100:.2f}%")
 print(f"Test Loss: {testLoss:.4f}")
-
 
 model.save("litemodel.keras")
